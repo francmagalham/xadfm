@@ -1,38 +1,52 @@
 package entities;
 
-import entities.enums.ChessPiece;
 import entities.enums.Color;
+import entities.enums.PieceTypes;
+import exceptions.MoveException;
 
-public abstract class Piece extends Position {
+public abstract class Piece {
 
 	private Color color;
-	private ChessPiece cPiece;
+	private PieceTypes cPiece;
+	private Boolean[][] possibleMoves = new Boolean[8][8];
 
-	public Piece(int row, int col, ChessPiece cPiece, Color color) {
-		super(row, col);
+	public Piece(PieceTypes cPiece, Color color) {
+		this.cPiece = cPiece;
+		this.color = color;
+	}
+
+	public Piece(PieceTypes cPiece, Color color, Boolean[][] possibleMoves) {
 		this.cPiece = cPiece;
 		this.color = color;
 	}
 	
-	public Piece(Position pos, ChessPiece cPiece, Color color) {
-		super(pos.getRow(), pos.getCol());
-		this.cPiece = cPiece;
-		this.color = color;
-	}
-
 	public Color getColor() {
 		return color;
 	}
 
-	public ChessPiece getName() {
+	public PieceTypes getcPiece() {
 		return cPiece;
 	}
 
 	@Override
 	public String toString() {
-		return "Piece [position/row=" + this.getRow() + " position/col=" + this.getCol() + " name = " + cPiece + " color=" + color + "]";
+		return this.cPiece.toString();
 	}
 	
-	public abstract Boolean canMovePieceTo (Board board, Position pos);
+	public void cleanPossibleMoves() {
+		for (int i = 0; i<8; i++) {
+			for (int j=0; j<8; j++) {
+				this.possibleMoves[i][j] = false;
+			}
+		}
+	}
+	
+	public void validateMove (Position pos) {
+		if (!this.possibleMoves[pos.getRow()][pos.getCol()]) {
+			throw new MoveException ("Illegal movement to your " + this.cPiece);
+		}
+	}
+
+	public abstract void possibleMoves (Board board, Piece piece, Position pos, int size);
 	
 }

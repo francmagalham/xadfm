@@ -1,6 +1,6 @@
 package entities.enums;
 
-public enum ChessPiece {
+public enum PieceTypes {
 
 	ROOK,
 	BISHOP,
