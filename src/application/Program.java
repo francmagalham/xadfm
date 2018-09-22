@@ -39,8 +39,8 @@ public class Program {
 					UIB.validateCoord(target);
 					
 					//System.out.println(Piece.toPosition(source, size) + " -> " +  Piece.toPosition(target, size));
-					System.out.println(board.getPieceOn (4, 4));
-					sc.nextLine();
+					//System.out.println(board.getPieceOn (4, 4));
+					//sc.nextLine();
 					
 				} catch (MoveException e) {
 					System.out.println(e);

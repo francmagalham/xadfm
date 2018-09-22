@@ -28,6 +28,10 @@ public abstract class Piece {
 		return cPiece;
 	}
 
+	public void setAPossibleMove(int row, int col) {
+		this.possibleMoves [row][col] = true;
+	}
+
 	@Override
 	public String toString() {
 		return this.cPiece.toString();
