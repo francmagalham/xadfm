@@ -1,6 +1,7 @@
 package application;
 
 import entities.Board;
+import entities.Match;
 import entities.Piece;
 import entities.enums.Color;
 import exceptions.MoveException;
@@ -35,8 +36,16 @@ public class UIB {
 	}
 	
 	// Limpa o ecran e imprime o tabuleiro.
-	public static void printBoard(Board board, int size) {
+	public static void printBoard(Match match, Boolean printPossibleMoves) {
+		
+		Board board = match.getBoard();
+		int size = match.getSize();
+		int turn = match.getTurn();
+		
 		clearScreen();		
+		System.out.print(ANSI_YELLOW);
+		System.out.println(" | TURN NUMBER: " + turn + " |");
+		System.out.print(ANSI_RESET);
 		System.out.println("  a b c d e f g h");
 
 		for (int i = 0; i < size; i++) {
@@ -46,6 +55,12 @@ public class UIB {
 			for (int j = 0; j < size; j++) {
 				pieceToPrint = board.getPieceOn(i, j);
 								
+				if (printPossibleMoves && Piece.possibleTarget (i, j)) {
+					System.out.print(ANSI_RED_BACKGROUND);					
+				} else {
+					System.out.print(ANSI_PURPLE_BACKGROUND);
+				}
+				
 				if (!(pieceToPrint==null)) {				
 					if (pieceToPrint.getColor() == Color.WHITE) {
 						System.out.print(ANSI_WHITE);
@@ -53,10 +68,10 @@ public class UIB {
 						System.out.print(ANSI_BLACK);
 					}
 					System.out.print(pieceToPrint.toString().charAt(0) + " ");
-					System.out.print(ANSI_WHITE);
 				} else {
 					System.out.print("  ");
 				}
+				
 			}
 			
 			System.out.print(ANSI_RESET);
@@ -64,6 +79,11 @@ public class UIB {
 		}
 		
 		System.out.println("  a b c d e f g h");
+		
+		System.out.print(ANSI_YELLOW);
+		System.out.println("- Black captured pieces: " + match.getBlackCaptured());
+		System.out.println("- White captured pieces: " + match.getWhiteCaptured());
+		System.out.print(ANSI_RESET);
 	}
 
 	// Valida se coordenadas introduzidas são corretas.

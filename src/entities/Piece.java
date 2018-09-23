@@ -8,18 +8,13 @@ public abstract class Piece {
 
 	private Color color;
 	private PieceTypes cPiece;
-	private Boolean[][] possibleMoves = new Boolean[8][8];
+	static private Boolean[][] possibleMoves = new Boolean[8][8];
 
 	public Piece(PieceTypes cPiece, Color color) {
 		this.cPiece = cPiece;
 		this.color = color;
 	}
 
-	public Piece(PieceTypes cPiece, Color color, Boolean[][] possibleMoves) {
-		this.cPiece = cPiece;
-		this.color = color;
-	}
-	
 	public Color getColor() {
 		return color;
 	}
@@ -28,29 +23,69 @@ public abstract class Piece {
 		return cPiece;
 	}
 
-	public void setAPossibleMove(int row, int col) {
-		this.possibleMoves [row][col] = true;
-	}
-
 	@Override
 	public String toString() {
 		return this.cPiece.toString();
 	}
-	
-	public void cleanPossibleMoves() {
-		for (int i = 0; i<8; i++) {
-			for (int j=0; j<8; j++) {
-				this.possibleMoves[i][j] = false;
+
+	// Assinala na matriz do tabuleiro uma posição com TRUE se for uma jogada
+	// possível para a peça.
+	static public void markPossibleMove(int row, int col) {
+		possibleMoves[row][col] = true;
+
+	}
+
+	// Inicializa todas as possíveis posições a FALSE.
+	static public void cleanPossibleMoves() {
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 8; j++) {
+				possibleMoves[i][j] = false;
 			}
 		}
 	}
-	
-	public void validateMove (Position pos) {
-		if (!this.possibleMoves[pos.getRow()][pos.getCol()]) {
-			throw new MoveException ("Illegal movement to your " + this.cPiece);
+
+	public void validateMove(Position pos) {
+		if (!possibleMoves[pos.getRow()][pos.getCol()]) {
+			throw new MoveException("Illegal " + this.cPiece + " movement");
 		}
 	}
 
-	public abstract void possibleMoves (Board board, Piece piece, Position pos, int size);
+	static public void validateSourceMove(Match match, Position sourcePosition) {
+		Piece pieceSource = match.getBoard().getPieceOn(sourcePosition);
+		
+		if (pieceSource == null) {
+			throw new MoveException ("You chose a position with no chess piece");
+		} else if (pieceSource.getColor() != match.turnPlayer()) {
+			throw new MoveException ("Pick up a piece of your own");
+		}
+	}
 	
+	static public Boolean checkTarget(Match match, Piece pieceTarget, int i, int j) {
+		if (pieceTarget == null) {										// Posição vazia.
+			Piece.markPossibleMove(i, j);
+			return false; 	
+		} else if (pieceTarget.getColor() == match.turnOpponent()) {	// Posição com peça do oponente.
+			Piece.markPossibleMove(i, j);
+			return true; 	
+		} else {														// Posição não ocupável.
+			return true;	
+		}
+	}
+	
+	static public Boolean possibleTarget(int row, int col) {
+		return possibleMoves[row][col];
+	}
+	
+	static public Boolean possibleTarget(Position targetPosition) {
+		return possibleMoves[targetPosition.getRow()][targetPosition.getCol()];
+	}
+	
+	static public void validateTargetMove(Position targetPosition) {
+		if (!possibleTarget(targetPosition)) {
+			throw new MoveException("Target position not allowed");
+		}
+	}
+
+	public abstract void possibleMoves(Match match, Position pos, int size);
+
 }
