@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import entities.enums.Color;
+import exceptions.MoveException;
 
 public class Match {
 
@@ -90,7 +91,9 @@ public class Match {
 	// Exibe o tabuleiro com as jogadas possíveis com base na peça origem.
 	public void showPossibleMoves(Position source) {
 		Piece piece = this.getBoard().getPieceOn(source);
-		piece.possibleMoves(this, source, size);
+		if (!piece.possibleMoves(this, source, size)) {
+			throw new MoveException ("No legal moves"); 
+		}
 	}
 
 	// Realiza a jogada com base nas peça origem e na posição destino.

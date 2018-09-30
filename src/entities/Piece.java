@@ -96,6 +96,6 @@ public abstract class Piece {
 		}
 	}
 
-	public abstract void possibleMoves(Match match, Position pos, int size);
+	public abstract boolean possibleMoves(Match match, Position pos, int size);
 
 }

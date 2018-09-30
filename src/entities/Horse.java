@@ -9,10 +9,12 @@ public class Horse extends Piece {
 		super(PieceTypes.HORSE, color);
 	}
 
-	public void possibleMoves(Match match, Position pos, int size) {
+	public boolean possibleMoves(Match match, Position pos, int size) {
 		int rowPos = pos.getRow();
 		int colPos = pos.getCol();
-
+		boolean anyMove = false;
+		boolean move;
+		
 		Piece.cleanPossibleMoves();
 
 		int i;
@@ -22,11 +24,14 @@ public class Horse extends Piece {
 			for (j=-2; j<=2 ; j++) {
 				if (i != 0 && j != 0 && Math.abs(i) != Math.abs(j)) {
 					if (rowPos+i>=0 && rowPos+i<match.getSize() && colPos+j>=0 && colPos+j<match.getSize() ) {
-						super.checkTarget(match, match.getBoard().getPieceOn(rowPos+i, colPos+j), rowPos+i, colPos+j);
+						move = super.checkTarget(match, match.getBoard().getPieceOn(rowPos+i, colPos+j), rowPos+i, colPos+j);
+						if (!anyMove) anyMove = !move;
 					}
 				}
 			}
 		}
+		
+		return anyMove;
 				
 	}
 }
