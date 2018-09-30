@@ -9,10 +9,12 @@ public abstract class Piece {
 	private Color color;
 	private PieceTypes cPiece;
 	static private Boolean[][] possibleMoves = new Boolean[8][8];
-
+	private Boolean firstMove;
+	
 	public Piece(PieceTypes cPiece, Color color) {
 		this.cPiece = cPiece;
 		this.color = color;
+		this.firstMove = true;
 	}
 
 	public Color getColor() {
@@ -21,6 +23,14 @@ public abstract class Piece {
 
 	public PieceTypes getcPiece() {
 		return cPiece;
+	}
+	
+	public Boolean isFirstMove() {
+		return firstMove;
+	}
+	
+	public void setFirstMove(Boolean firstMove) {
+		this.firstMove = firstMove;
 	}
 
 	@Override
